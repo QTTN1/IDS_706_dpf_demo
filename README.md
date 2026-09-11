@@ -37,4 +37,4 @@ Results: every category trended up overall, and followed a similar monthly trend
 
 **Visualization**
 
-Plots showing monthly, and overall trend of sales for each category. Scatter plot of order count trend vs. sales trend, colored by avg order value trend, so all three show up in one visualization.
+Plots showing monthly, and overall trend of sales for each category(all_category_trend.png). Scatter plot of order count trend vs. sales trend, colored by avg order value trend, so all three show up in one visualization(trend_scatter).
