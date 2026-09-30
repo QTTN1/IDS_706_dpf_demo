@@ -1,5 +1,4 @@
-# Makes sure sales_analysis.py (repo root) is importable from tests/,
-# regardless of what directory pytest is invoked from.
+# Makes sure sales_analysis.py is importable from tests/, regardless of what directory pytest is invoked from.
 import os
 import sys
 
