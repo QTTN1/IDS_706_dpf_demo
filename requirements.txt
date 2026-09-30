@@ -1,0 +1,8 @@
+# Runtime dependencies (what sales_analysis.py actually imports)
+pandas
+scikit-learn
+matplotlib
+kagglehub
+
+# Test dependency
+pytest
