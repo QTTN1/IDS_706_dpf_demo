@@ -5,13 +5,12 @@ My data engineering project using pandas to explore a sales dataset from Kaggle.
 ## Setup
 
 ```
-conda create -n data706 python=3.12 pandas scipy numpy scikit-learn matplotlib seaborn -c conda-forge
+conda create -n data706 python=3.12 pandas scipy numpy scikit-learn matplotlib seaborn pytest -c conda-forge
 conda activate data706
 pip install kagglehub
-python Week2_Mini_Assignment.py
 ```
 
-Script downloads the dataset automatically with kagglehub, so no manual download needed.
+Then open `Week2_Mini_Assignment.ipynb` and run all the cells -- it downloads the dataset automatically with kagglehub, so no manual download needed. (To run the tests instead, see the Testing & CI section below.)
 
 ## Dataset
 
