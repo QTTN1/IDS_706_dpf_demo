@@ -4,5 +4,6 @@ scikit-learn
 matplotlib
 kagglehub
 
-# Test dependency
+# Test + code-quality dependencies
 pytest
+black

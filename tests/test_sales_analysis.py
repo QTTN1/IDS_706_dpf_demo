@@ -14,6 +14,7 @@ from sales_analysis import (
     run_full_analysis,
 )
 
+
 def _make_og_rows():
     """A couple of rows shaped like the real original CSV export, before cleaning:
     - has the leftover 'Unnamed: 0' index column
@@ -118,11 +119,15 @@ def test_monthly_category_trends(trend_df):
     assert set(trends["Product Category"]) == {"Laptops", "Batteries"}
 
     # Laptops slope should be +$500/month
-    laptops_slope = trends.loc[trends["Product Category"] == "Laptops", "monthly_trend_slope"].iloc[0]
+    laptops_slope = trends.loc[
+        trends["Product Category"] == "Laptops", "monthly_trend_slope"
+    ].iloc[0]
     assert laptops_slope == pytest.approx(500)
 
     # Batteries slope should be -$100/month
-    batteries_slope = trends.loc[trends["Product Category"] == "Batteries", "monthly_trend_slope"].iloc[0]
+    batteries_slope = trends.loc[
+        trends["Product Category"] == "Batteries", "monthly_trend_slope"
+    ].iloc[0]
     assert batteries_slope == pytest.approx(-100)
 
     # sorted fastest-growing first -> Laptops (positive) before Batteries (negative)
@@ -131,30 +136,67 @@ def test_monthly_category_trends(trend_df):
 
 @pytest.fixture
 def sample_csv(tmp_path):
-    """Writes a small CSV to disk and returns its path. 
+    """Writes a small CSV to disk and returns its path.
     run_full_analysis reads this instead of 'Sales Data.csv' so this test never touches
     kagglehub or the network.
     """
     rows = [
-        {"Order ID": 100, "Product Category": "Laptops", "Product": "Laptops Item",
-         "Quantity Ordered": 1, "Price Each": 500, "Order Date": "1/15/19 10:00",
-         "Purchase Address": "1 Main St, Boston, MA 00000", "Month": 1, "Sales": 500,
-         "City": " Boston", "Hour": 10, "Time of Day": "Morning"},
-
-        {"Order ID": 101, "Product Category": "Laptops", "Product": "Laptops Item",
-         "Quantity Ordered": 1, "Price Each": 600, "Order Date": "2/15/19 10:00",
-         "Purchase Address": "1 Main St, Boston, MA 00000", "Month": 2, "Sales": 600,
-         "City": " Boston", "Hour": 10, "Time of Day": "Morning"},
-
-        {"Order ID": 200, "Product Category": "Batteries", "Product": "Batteries Item",
-         "Quantity Ordered": 1, "Price Each": 20, "Order Date": "1/16/19 11:00",
-         "Purchase Address": "2 Main St, Seattle, WA 00000", "Month": 1, "Sales": 20,
-         "City": "Seattle ", "Hour": 11, "Time of Day": "Morning"},
-
-        {"Order ID": 201, "Product Category": "Batteries", "Product": "Batteries Item",
-         "Quantity Ordered": 1, "Price Each": 15, "Order Date": "2/16/19 11:00",
-         "Purchase Address": "2 Main St, Seattle, WA 00000", "Month": 2, "Sales": 15,
-         "City": "Seattle ", "Hour": 11, "Time of Day": "Morning"},
+        {
+            "Order ID": 100,
+            "Product Category": "Laptops",
+            "Product": "Laptops Item",
+            "Quantity Ordered": 1,
+            "Price Each": 500,
+            "Order Date": "1/15/19 10:00",
+            "Purchase Address": "1 Main St, Boston, MA 00000",
+            "Month": 1,
+            "Sales": 500,
+            "City": " Boston",
+            "Hour": 10,
+            "Time of Day": "Morning",
+        },
+        {
+            "Order ID": 101,
+            "Product Category": "Laptops",
+            "Product": "Laptops Item",
+            "Quantity Ordered": 1,
+            "Price Each": 600,
+            "Order Date": "2/15/19 10:00",
+            "Purchase Address": "1 Main St, Boston, MA 00000",
+            "Month": 2,
+            "Sales": 600,
+            "City": " Boston",
+            "Hour": 10,
+            "Time of Day": "Morning",
+        },
+        {
+            "Order ID": 200,
+            "Product Category": "Batteries",
+            "Product": "Batteries Item",
+            "Quantity Ordered": 1,
+            "Price Each": 20,
+            "Order Date": "1/16/19 11:00",
+            "Purchase Address": "2 Main St, Seattle, WA 00000",
+            "Month": 1,
+            "Sales": 20,
+            "City": "Seattle ",
+            "Hour": 11,
+            "Time of Day": "Morning",
+        },
+        {
+            "Order ID": 201,
+            "Product Category": "Batteries",
+            "Product": "Batteries Item",
+            "Quantity Ordered": 1,
+            "Price Each": 15,
+            "Order Date": "2/16/19 11:00",
+            "Purchase Address": "2 Main St, Seattle, WA 00000",
+            "Month": 2,
+            "Sales": 15,
+            "City": "Seattle ",
+            "Hour": 11,
+            "Time of Day": "Morning",
+        },
     ]
     csv_path = tmp_path / "sample_sales.csv"
     pd.DataFrame(rows).to_csv(csv_path)
@@ -185,7 +227,10 @@ def test_run_full_analysis(sample_csv):
     # verify monthly_category_trends_extended
     # confirms the cleaned df was correctly passed into monthly_category_trends_extended
     # confirms the 2nd call didn't get skipped or incorrect data
-    assert set(results["trends_extended"]["Product Category"]) == {"Laptops", "Batteries"}
+    assert set(results["trends_extended"]["Product Category"]) == {
+        "Laptops",
+        "Batteries",
+    }
 
 
 # ---------------------------------------------------------------------------

@@ -5,7 +5,8 @@ Refactored out of Week2_Mini_Assignment.ipynb into testablefunctions
 """
 
 import matplotlib
-matplotlib.use("Agg") 
+
+matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
@@ -88,8 +89,7 @@ def monthly_category_trends(df):
 
 
 def monthly_category_trends_extended(df):
-    """Expands on monthly_category_trends with order-count and average-order-value trends.
-    """
+    """Expands on monthly_category_trends with order-count and average-order-value trends."""
     monthly = (
         df.groupby(["Product Category", "Month"])
         .agg(total_sales=("Sales", "sum"), order_count=("Order ID", "count"))
@@ -114,7 +114,12 @@ def monthly_category_trends_extended(df):
         )
 
     # columns= keeps the expected schema even when results is empty (no data)
-    columns = ["Product Category", "sales_trend", "order_count_trend", "avg_order_value_trend"]
+    columns = [
+        "Product Category",
+        "sales_trend",
+        "order_count_trend",
+        "avg_order_value_trend",
+    ]
     return (
         pd.DataFrame(results, columns=columns)
         .sort_values("sales_trend", ascending=False)
@@ -156,9 +161,11 @@ def plot_category_trend_grid(df, save_path="all_categories_trend.png"):
     categories = monthly["Product Category"].unique()
     n = len(categories)
     ncols = 2
-    nrows = -(-n // ncols) 
+    nrows = -(-n // ncols)
 
-    fig, axes = plt.subplots(nrows=nrows, ncols=ncols, figsize=(14, 4 * nrows), sharex=True)
+    fig, axes = plt.subplots(
+        nrows=nrows, ncols=ncols, figsize=(14, 4 * nrows), sharex=True
+    )
     axes = axes.flatten() if n > 1 else [axes]
 
     for ax, category in zip(axes, categories):
@@ -177,7 +184,9 @@ def plot_category_trend_grid(df, save_path="all_categories_trend.png"):
         ax.axis("off")
 
     axes[0].legend(loc="upper left", fontsize=9)
-    fig.suptitle("Actual vs. Fitted Monthly Sales Trend by Product Category", fontsize=14)
+    fig.suptitle(
+        "Actual vs. Fitted Monthly Sales Trend by Product Category", fontsize=14
+    )
     plt.tight_layout()
     plt.savefig(save_path, dpi=150)
     plt.close(fig)
