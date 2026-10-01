@@ -79,8 +79,9 @@ def monthly_category_trends(df):
         slope = LinearRegression().fit(X, y).coef_[0]
         results.append({"Product Category": category, "monthly_trend_slope": slope})
 
+    # columns= keeps the expected schema even when results is empty (no data)
     return (
-        pd.DataFrame(results)
+        pd.DataFrame(results, columns=["Product Category", "monthly_trend_slope"])
         .sort_values("monthly_trend_slope", ascending=False)
         .reset_index(drop=True)
     )
@@ -112,8 +113,10 @@ def monthly_category_trends_extended(df):
             }
         )
 
+    # columns= keeps the expected schema even when results is empty (no data)
+    columns = ["Product Category", "sales_trend", "order_count_trend", "avg_order_value_trend"]
     return (
-        pd.DataFrame(results)
+        pd.DataFrame(results, columns=columns)
         .sort_values("sales_trend", ascending=False)
         .reset_index(drop=True)
     )

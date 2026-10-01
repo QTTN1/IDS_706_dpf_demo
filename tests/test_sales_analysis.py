@@ -4,7 +4,15 @@ Tests for sales_analysis.py(matches week2_mini_assignment.ipynb).
 
 import pandas as pd
 import pytest
-from sales_analysis import clean_data, filter_by_city, monthly_category_trends, run_full_analysis
+from sales_analysis import (
+    category_summary,
+    clean_data,
+    filter_by_city,
+    filter_high_value_orders,
+    monthly_category_trends,
+    monthly_category_trends_extended,
+    run_full_analysis,
+)
 
 def _make_og_rows():
     """A couple of rows shaped like the real original CSV export, before cleaning:
@@ -178,3 +186,59 @@ def test_run_full_analysis(sample_csv):
     # confirms the cleaned df was correctly passed into monthly_category_trends_extended
     # confirms the 2nd call didn't get skipped or incorrect data
     assert set(results["trends_extended"]["Product Category"]) == {"Laptops", "Batteries"}
+
+
+# ---------------------------------------------------------------------------
+# Edge cases
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture
+def boundary_orders_df():
+    """Three orders straddling the $500 threshold: just under, exactly at, just over."""
+    return pd.DataFrame({"Order ID": [1, 2, 3], "Sales": [499.99, 500.00, 500.01]})
+
+
+@pytest.fixture
+def empty_raw_df(raw_df):
+    """Same columns as raw_df but zero rows -- simulates an empty CSV export."""
+    return raw_df.iloc[0:0]
+
+
+def test_filter_high_value_orders_boundary(boundary_orders_df):
+    """Edge case: the threshold is strict (Sales > 500), so an order of
+    exactly $500 must be excluded, while $500.01 is kept."""
+    high_value = filter_high_value_orders(boundary_orders_df, threshold=500)
+
+    assert list(high_value["Order ID"]) == [3]
+    assert 500.00 not in high_value["Sales"].values
+
+
+def test_filter_by_city_nonexistent(clean_df):
+    """Edge case: a city that isn't in the data should return an empty
+    DataFrame (same columns), not raise an error."""
+    result = filter_by_city(clean_df, "Atlantis")
+
+    assert result.empty
+    assert list(result.columns) == list(clean_df.columns)
+
+
+def test_empty_dataframe(empty_raw_df):
+    """Edge case: an empty dataset (correct columns, zero rows) should flow
+    through cleaning, summarizing, and trend fitting without crashing, and
+    each step should return an empty result with the expected columns."""
+    cleaned = clean_data(empty_raw_df.copy())
+    assert cleaned.empty
+    assert "Unnamed: 0" not in cleaned.columns
+
+    assert category_summary(cleaned).empty
+
+    trends = monthly_category_trends(cleaned)
+    assert trends.empty
+    assert "monthly_trend_slope" in trends.columns
+
+    trends_ext = monthly_category_trends_extended(cleaned)
+    assert trends_ext.empty
+    assert {"sales_trend", "order_count_trend", "avg_order_value_trend"} <= set(
+        trends_ext.columns
+    )
