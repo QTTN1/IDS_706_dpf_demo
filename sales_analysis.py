@@ -18,12 +18,6 @@ from sklearn.linear_model import LinearRegression
 # Format of "Order Date" in the raw Kaggle CSV (day-month-year hour:minute)
 DATE_FORMAT = "%d-%m-%Y %H:%M"
 
-# Known typos in the raw "Product Category" column -> corrected name
-CATEGORY_FIXES = {"Batterie": "Batteries"}
-
-# Holiday month(s) excluded in the seasonality check (December = 12)
-HOLIDAY_MONTHS = (12,)
-
 
 # ---------------------------------------------------------------------------
 # Loading, cleaning, data quality
@@ -98,7 +92,10 @@ def clean_data(df):
     # "05-12-2019" from being misread as May 12 instead of 5 December.
     df["Order Date"] = pd.to_datetime(df["Order Date"], format=DATE_FORMAT)
     df["City"] = df["City"].str.strip()
-    df["Product Category"] = df["Product Category"].str.strip().replace(CATEGORY_FIXES)
+    # the raw data misspells one category as "Batterie"
+    df["Product Category"] = (
+        df["Product Category"].str.strip().replace({"Batterie": "Batteries"})
+    )
     return df
 
 
@@ -209,11 +206,12 @@ def monthly_category_trends_extended(df):
     )
 
 
-def seasonality_check(df, exclude_months=HOLIDAY_MONTHS):
+def seasonality_check(df, exclude_months=(12,)):
     """Is each category's growth real, or just the holiday spike?
 
-    Refits the Sales ~ Month trend with and without the holiday month(s) and
-    reports R^2, so a reader can see how much of the "growth" December explains.
+    Refits the Sales ~ Month trend with and without the holiday month(s)
+    (December by default) and reports R^2, so a reader can see how much of the
+    "growth" December explains.
     """
     monthly = _monthly_by_category(df)
     results = []

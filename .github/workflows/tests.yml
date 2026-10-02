@@ -22,5 +22,11 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      - name: Check formatting (black)
+        run: black --check --diff sales_analysis.py conftest.py tests/
+
+      - name: Lint (flake8)
+        run: flake8 sales_analysis.py conftest.py tests/
+
       - name: Run tests
         run: pytest tests/ -v

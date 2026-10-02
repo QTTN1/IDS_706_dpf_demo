@@ -1,0 +1,8 @@
+[flake8]
+# black wraps code at 88; the higher limit is for one-line docstrings/comments
+max-line-length = 140
+extend-ignore = E203
+# matplotlib.use("Agg") must run before pyplot is imported, so those imports can't be at the very top of the file
+per-file-ignores =
+    sales_analysis.py:E402
+exclude = .git,__pycache__,.pytest_cache,.venv,output

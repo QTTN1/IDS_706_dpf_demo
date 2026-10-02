@@ -1,9 +1,11 @@
+
 # Runtime dependencies (what sales_analysis.py actually imports)
-pandas
-scikit-learn
-matplotlib
-kagglehub
+pandas==3.0.6
+scikit-learn==1.9.1
+matplotlib==3.11.0
+kagglehub==1.0.2
 
 # Test + code-quality dependencies
-pytest
-black
+pytest==9.1.1
+black==26.5.1
+flake8==7.3.0

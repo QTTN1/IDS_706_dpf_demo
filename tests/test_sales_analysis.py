@@ -98,8 +98,7 @@ def test_filter_by_city(clean_df):
 
 
 def _make_trend_test_rows():
-    """Three months of data for two categories, trending in opposite directions,
-    to test monthly_category_trends:
+    """Three months of data for two categories, trending in opposite directions, to test monthly_category_trends:
     - Laptops: Sales rising 500, 1000, 1500 (positive slope)
     - Batteries: Sales falling 300, 200, 100 (negative slope)
     """
@@ -144,8 +143,7 @@ def test_monthly_category_trends(trend_df):
 @pytest.fixture
 def sample_csv(tmp_path):
     """Writes a small CSV to disk and returns its path.
-    run_full_analysis reads this instead of 'Sales Data.csv' so this test never touches
-    kagglehub or the network.
+    run_full_analysis reads this instead of 'Sales Data.csv' so this test never touches kagglehub or the network.
     """
     rows = [
         {
@@ -259,8 +257,7 @@ def boundary_orders_df():
 
 
 def test_filter_high_value_orders_boundary(boundary_orders_df):
-    """Edge case: the threshold is (Sales > 500), so an order of exactly $500
-    must be excluded, while $500.01 is kept."""
+    """Edge case: the threshold is (Sales > 500), so an order of exactly $500 must be excluded, while $500.01 is kept."""
     high_value = filter_high_value_orders(boundary_orders_df, threshold=500)
 
     assert list(high_value["Order ID"]) == [3]
@@ -308,8 +305,8 @@ def test_empty_dataframe(empty_raw_df):
 
 def test_clean_data_fixes_category_typo_and_drops_duplicates(raw_df):
     """The raw data spells one category "Batterie"; cleaning should fix it.
-    An exact duplicate row (same line item recorded twice) should be dropped,
-    even though its leftover "Unnamed: 0" index value differs."""
+    An exact duplicate row (same line item recorded twice) should be dropped, even though its leftover "Unnamed: 0" index value differs.
+    """
     raw = raw_df.copy()
     raw.loc[1, "Product Category"] = "Batterie"
     duplicate = raw.iloc[[0]].copy()
@@ -369,8 +366,7 @@ def test_data_quality_report(messy_raw_df):
 
 
 def test_seasonality_check_separates_holiday_spike():
-    """Flat sales all year plus a December spike: the all-months trend looks
-    like growth, but excluding December the slope is ~0."""
+    """Flat sales all year plus a December spike: the all-months trend looks like growth, but excluding December the slope is ~0."""
     flat = [
         {"Product Category": "Monitors", "Month": m, "Sales": 1000}
         for m in range(1, 12)
